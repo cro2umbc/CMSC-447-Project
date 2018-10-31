@@ -11,11 +11,11 @@ module.exports = function(server) {
   });
 
   router.get('/signup', function(req, res) {
-    res.send(__dirname + '/client/signup.html');
+    res.sendFile(__dirname + '/client/signup.html');
   });
 
   router.get('/login', function(req, res) {
-    res.send(__dirname + '/client/login.html');
+    res.sendFile(__dirname + '/client/login.html');
   });
 
   server.use(router);
