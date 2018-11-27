@@ -2,5 +2,15 @@
   "db": {
     "name": "db",
     "connector": "memory"
+  },
+  "dating-app": {
+    "host": "localhost",
+    "port": 3306,
+    "url": "mysql://root:toor@localhost/dating-app",
+    "database": "dating-app",
+    "password": "toor",
+    "name": "dating-app",
+    "user": "root",
+    "connector": "mysql"
   }
 }

@@ -52,6 +52,11 @@
                   </div>
               </div>
             </div>
+            <div class="row">
+                <div class="col-sm-12" style="padding-top:5%">
+                  <div id='fail_login' class="alert alert-danger" style="display:none;" role="alert">Your password or username was incorrect.</div>
+                </div>
+              </div>
     </div>
 
   <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
@@ -64,7 +69,26 @@
                   $('#submit').on('click', function() {
                      console.log($('#username').val())
                      console.log($('#password').val())
-                        
+                     $.ajax({
+                        type: 'post',
+                        url: "http://localhost:3000/api/user_models",
+                        data: JSON.stringify({
+                            username: $('#username').val(),
+                            password: $('#username').val()
+                          }),
+                        contentType : "application/json",
+			                  dataType : 'json',
+                        success: function(data) {
+                            console.log(data)
+                            document.cookie = "id=" + data.id;
+                            document.cookie =  "username=" + data.username;
+                            window.location.replace('http://localhost:3000/find')
+                        },
+                        error : function(error){
+                          $('#fail_login').fadeIn();
+                          console.log(error)
+                        }
+                    });
                   });
                   
                   
