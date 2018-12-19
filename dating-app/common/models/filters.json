@@ -1,0 +1,48 @@
+{
+  "name": "filters",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "id": {
+      "type": "number",
+      "required": true,
+      "default": ""
+    },
+    "user_id": {
+      "type": "number",
+      "required": true,
+      "default": ""
+    },
+    "type": {
+      "type": "string",
+      "required": true,
+      "default": "-1"
+    },
+    "sub": {
+      "type": "string",
+      "required": true,
+      "default": "-1"
+    },
+    "isOpen": {
+      "type": "boolean",
+      "required": true
+    },
+    "price": {
+      "type": "string",
+      "required": true,
+      "default": "3"
+    },
+    "rating": {
+      "type": "string",
+      "required": true,
+      "default": "3"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

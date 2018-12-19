@@ -38,5 +38,9 @@
   "user_model": {
     "dataSource": "dating-app",
     "public": true
+  },
+  "filters": {
+    "dataSource": "dating-app",
+    "public": true
   }
 }

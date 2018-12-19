@@ -4,10 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Find</title>
+    <title>NoWut</title>
     <link rel="stylesheet" href="bootswatch_minty.css" />
     <link rel="stylesheet" href="stars.css" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.3.1/css/bootstrap-slider.min.css"
+    />
     <style>
       .hidden {
         visibility: hidden;
@@ -19,7 +26,7 @@
     <!-- Navbar -->
     <div class="navbar navbar-expand-lg navbar-dark bg-primary">
       <div class="container">
-        <a href="/find" class="navbar-brand">Date Finder</a>
+        <a href="/find" class="navbar-brand">NoWut</a>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav ml-auto" style="  display: flex;">
             <li class="nav-item logged_out">
@@ -41,20 +48,110 @@
 
     <!-- End of Navbar -->
 
-    <div class="container">
+    <div class="container-fluid">
       <div class="row" style="padding-top: 5%;">
         <!-- Results Column -->
-        <div class="col-sm-3" style="background-color: #989da5; overflow-y: scroll; height: 650px; width: 100%; padding: 2px;" id="results">
+        <div
+          class="col-sm-2 offset-sm-1"
+          style="background-color: #e8e8e8; border:1px solid #0000000a;"
+        >
+          <h5 id="results_length"></h5>
+          <div
+            style="overflow-y: scroll; height: 700px; width: 100%; padding: 2px;"
+            id="results"
+          ></div>
         </div>
         <!-- End of Results Column -->
 
-        <div class="col-sm-9">
-          <div class="row" style="background-color: #606468">
-            <div style="height: 100px; width: 100%"></div>
+        <div class="col-sm-6">
+          <div
+            class="row"
+            style="background-color: #e8e8e8; border:1px solid #0000000a;"
+          >
+            <div style="height: 150px; width: 100%">
+              <h5> <strong>Filters</strong> </h5>
+              <hr>
+              <form>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="row" style="margin-left: 20px;">
+                      <select
+                        class="form-control form-control-sm"
+                        id="filter_selectedType"
+                      >
+                        <option value="-1">Select Type</option>
+                        <option value="0">Food</option>
+                        <option value="1">Store</option>
+                        <option value="2">Point of Interest</option>
+                      </select>
+                      <br>
+                      <select
+                      class="form-control form-control-sm"
+                      id="filter_selectedSubCat"
+                    > 
+                      <option value="-1">Select Sub Category</option>
+                    </select>
+                    </div>
+                    
+                    <div class="row" style="margin-left: 40px;">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        value="false"
+                        id="filter_isOpen"
+                        onclick="$(this).val(this.checked ? true : false)"
+                      />
+                      <label class="form-check-label"> Only Open </label>
+                    </div>
+                    <!-- <div class="col-sm-4"></div> -->
+                  </div>
+                  <div class="col-sm-4  offset-sm-2">
+                    <div class="row">
+                        <label for="price">Price </label>
+                    </div>
+                    <div class="row">
+                      
+                      <input type="range" id="filter_price" name="price"
+                      min="0" max="5" step="1" value="1">
+                     
+                    </div>
+                    <div class="row">
+                        <label for="rating">Ratings </label>
+                    </div>
+                    <div class="row">
+                        
+                      <input type="range" id="filter_rating" name="rating"
+                      min="0" max="5" step="1" value="1">
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
           </div>
-          <div class="row" style="background-color: #6e7d8c">
-            <input id="pac-input" class="controls form-control" type="text" placeholder="Search Places">
+          <div class="row" style="background-color: #e8e8e8">
+            <input
+              id="pac-input"
+              class="controls form-control"
+              type="text"
+              placeholder="Search Places"
+            />
             <div style="height: 500px; width: 100%" id="map"></div>
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <div id='filter_preset' class='hidden'>
+            
+            <div class="row">
+              <div class="col-sm-7">
+                  <h4>Saved Filters</h4>
+              </div>
+              <div class="col-sm-5">
+                  <input type="button" name="add_filter" id="add_filter" value="Save Filter" class="btn btn-sm btn-primary">
+              </div>
+            </div>
+            <div class="row" id="filter_table">
+              
+            </div>
           </div>
         </div>
       </div>
@@ -63,100 +160,178 @@
     <script
       src="https://code.jquery.com/jquery-3.2.1.min.js"
       integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-      crossorigin="anonymous"></script>
+      crossorigin="anonymous"
+    ></script>
     <script
       src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
       integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-      crossorigin="anonymous"></script>
-      <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwSkGuWO4KYNoI6mr17mRxiDlhcVMtuM0&libraries=places"></script> -->
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.3.1/bootstrap-slider.min.js"></script>
+
+    <!--
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwSkGuWO4KYNoI6mr17mRxiDlhcVMtuM0&libraries=places"></script>
+    -->
     <script>
-      function addPlace(place){
-        var card = document.createElement('div');
-      //  var image = document.createElement('img');
-        var card_body = document.createElement('div');
-        var title = document.createElement('h6');
-        var desc = document.createElement('p');
-       // var link = document.createElement('a');
-       
 
-        card.classList.add('card');
-      //  image.classList.add('card-img-top');
-        card_body.classList.add('card-body');
-        title.classList.add('card-title');
-        desc.classList.add('card-text')
-       // link.classList.add('btn', 'btn-primary');
+      var markers = [];
+      var places = [];
+      var filter_history = [];
+      var type_list = [["cafe", "restaurant", "establishment", "bar", 'bakery'], ["supermarket", "hair_care"], ["park", "beauty_salon", "bowling_alley", "casino", "zoo", 'amusement_park']]
+      var filter = {
+        types: ["food", "store", "point_of_interest"],
+        selectedType: -1,
+        radius: 5,
+        isOpen: false
+      };
 
-      //  image.src = place.icon;
+      function collectFilters() {
+        return {
+          types: ["cafe", "store", "restaurant", "point_of_interest", "food", "establishment", "park"],
+          selectedType: document.getElementById("filter_selectedType").value,
+          selectedSub : document.getElementById("filter_selectedSubCat").value,
+          isOpen: document.getElementById("filter_isOpen").value,
+          price: document.getElementById("filter_price").value,
+          rating: document.getElementById("filter_rating").value
+          
+        };
+      }
+
+      function setFilter(index){
+          console.log(filter_history[index])
+          document.getElementById("filter_selectedType").value = filter_history[index].type
+          document.getElementById("filter_selectedSubCat").value = filter_history[index].sub
+          document.getElementById("filter_isOpen").value = filter_history[index].isOpen
+          document.getElementById("filter_price").value = filter_history[index].price
+          document.getElementById("filter_rating").value = filter_history[index].rating
+
+          var list = type_list[filter_history[index].type];
+          $('#filter_selectedSubCat').empty(); 
+          $('#filter_selectedSubCat').append(new Option('Select Sub Category', -1, true, true)); //  <option value="-1">Select Sub Category</option>
+          list.forEach(function(item, i){
+            $('#filter_selectedSubCat').append(new Option(item.replace(/[_-]/g, " "), i, true, true));
+          })
+          // var event = new Event('on');
+          // document.getElementById("filter_selectedType").dispatchEvent(event, true);
+        }
+
+      function filterPlaces(places_arr) {
+        var cur_filters = collectFilters();
+        console.log(cur_filters);
+        console.log(places_arr);
+        return places_arr.filter(function(place){
+          
+          if(cur_filters.isOpen && place.opening_hours != undefined){
+            if(!place.opening_hours.open_now)
+                return false;
+          }
+
+          if(place.price_level != undefined)
+            if(place.price_level > parseInt(cur_filters.price))
+              return false;
+
+          if(parseInt(cur_filters.selectedType) != -1)
+            if(place.types.find(function(type){ if(type == cur_filters.types[cur_filters.selectedType]) return true}) == undefined)
+              return false;
+
+          if(parseInt(cur_filters.selectedType) != -1)
+            if(place.types.find(function(type){ if(type == cur_filters.types[cur_filters.selectedType]) return true}) == undefined)
+              return false;
+          
+
+          if(place.rating >= parseInt(cur_filters.rating)) 
+            return true;
+          else 
+            return false;
+        })
+       // return places_arr;
+      }
+
+      function clearResults() {
+        var myNode = document.getElementById("results");
+        while (myNode.firstChild) {
+          myNode.removeChild(myNode.firstChild);
+        }
+      }
+
+      function setResultSize(size) {
+        var res_len = document.getElementById("results_length");
+        res_len.innerHTML = "Result Size: " + size;
+      }
+
+      function addPlace(place) {
+        var card = document.createElement("div");
+        //  var image = document.createElement('img');
+        var card_body = document.createElement("div");
+        var title = document.createElement("h6");
+        var desc = document.createElement("p");
+        // var link = document.createElement('a');
+
+        card.classList.add("card");
+        //  image.classList.add('card-img-top');
+        card_body.classList.add("card-body");
+        title.classList.add("card-title");
+        desc.classList.add("card-text");
+        // link.classList.add('btn', 'btn-primary');
+        //  image.src = place.icon;
         title.innerHTML = place.name;
         desc.innerHTML = place.formatted_address;
+        // ratings stuff
+        var star_outer = document.createElement("div");
+        var star_inner = document.createElement("div");
+        var rate_value = document.createElement("span");
+        star_outer.classList.add("star-outer");
+        star_inner.classList.add("star-inner");
+        rate_value.classList.add("number-rating");
 
-
-      // ratings stuff
-        var star_outer = document.createElement('div');
-        var star_inner = document.createElement('div');
-        var rate_value = document.createElement('span');
-
-        star_outer.classList.add('star-outer');
-        star_inner.classList.add('star-inner');
-        rate_value.classList.add('number-rating');
-        
         // var starPercentageRounded = (Math.round(place.rating / 10) * 10) + '%';
         // star_inner.style.width = '50%';
-        rate_value.innerHTML = 'Rate : ' + place.rating + '/5.0';
-
+        rate_value.innerHTML = "Rate : " + place.rating + "/5.0";
         //star_outer.appendChild(star_inner);
         star_outer.appendChild(rate_value);
-        
 
-      // end of rating stuff
-
-
+        // end of rating stuff
         card_body.appendChild(title);
         card_body.appendChild(desc);
-       // card_body.appendChild(link);
+        // card_body.appendChild(link);
         card_body.appendChild(star_outer);
-
         card.appendChild(card_body);
-        card.style.marginBottom = '4px';
-
+        card.style.marginBottom = "4px";
         document.getElementById("results").appendChild(card);
       }
 
-
-
       function initAutocomplete() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: 39.2543159, lng: -76.7152464},
+        var map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: 39.2543159, lng: -76.7152464 },
           zoom: 13,
-          mapTypeId: 'roadmap'
+          mapTypeId: "roadmap"
         });
-
         // Create the search box and link it to the UI element.
-        var input = document.getElementById('pac-input');
+        var input = document.getElementById("pac-input");
         var searchBox = new google.maps.places.SearchBox(input);
-       // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
+        // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
         // Bias the SearchBox results towards current map's viewport.
-        map.addListener('bounds_changed', function() {
+        map.addListener("bounds_changed", function() {
           searchBox.setBounds(map.getBounds());
         });
-
-        var markers = [];
+        
         // Listen for the event fired when the user selects a prediction and retrieve
         // more details for that place.
-        searchBox.addListener('places_changed', function() {
-          var places = searchBox.getPlaces();
+        searchBox.addListener("places_changed", function() {
+          places = filterPlaces(searchBox.getPlaces());
 
           if (places.length == 0) {
+            alert("No results were found.")
             return;
           }
-          console.log(places)
+
+          clearResults();
+          setResultSize(places.length);
           // Clear out the old markers.
           markers.forEach(function(marker) {
             marker.setMap(null);
           });
           markers = [];
-
           // For each place, get the icon, name and location.
           var bounds = new google.maps.LatLngBounds();
           places.forEach(function(place) {
@@ -164,9 +339,7 @@
               console.log("Returned place contains no geometry");
               return;
             }
-
             addPlace(place);
-
             var icon = {
               url: place.icon,
               size: new google.maps.Size(71, 71),
@@ -174,15 +347,15 @@
               anchor: new google.maps.Point(17, 34),
               scaledSize: new google.maps.Size(25, 25)
             };
-
             // Create a marker for each place.
-            markers.push(new google.maps.Marker({
-              map: map,
-              icon: icon,
-              title: place.name,
-              position: place.geometry.location
-            }));
-
+            markers.push(
+              new google.maps.Marker({
+                map: map,
+                icon: icon,
+                title: place.name,
+                position: place.geometry.location
+              })
+            );
             if (place.geometry.viewport) {
               // Only geocodes have viewport.
               bounds.union(place.geometry.viewport);
@@ -194,7 +367,7 @@
         });
       }
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwSkGuWO4KYNoI6mr17mRxiDlhcVMtuM0&libraries=places&callback=initAutocomplete"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=&libraries=places&callback=initAutocomplete"></script>
     <script>
       function getCookie(cname) {
         var name = cname + "=";
@@ -221,6 +394,8 @@
           $(".logged_out").addClass("hidden");
           $("#username_placement").text(getCookie("username"));
           $(".logged_in").removeClass("hidden");
+          $("#filter_preset").removeClass('hidden')
+          getFiltersByUserId(getCookie("id"))
         }
 
         $("#logout_fn").on("click", function() {
@@ -228,6 +403,100 @@
           deleteCookie("username");
           window.location.replace("http://localhost:3000/login");
         });
+
+        $("#filter_price_level").slider({
+          formatter: function(value) {
+            return "Current value: " + value;
+          }
+        });
+
+        $('#filter_selectedType').on('change', function(){
+          var value = document.getElementById("filter_selectedType").value
+          var list = type_list[value];
+          $('#filter_selectedSubCat').empty(); 
+          $('#filter_selectedSubCat').append(new Option('Select Sub Category', -1, true, true)); //  <option value="-1">Select Sub Category</option>
+          list.forEach(function(item, i){
+            $('#filter_selectedSubCat').append(new Option(item.replace(/[_-]/g, " "), i, true, true));
+          })
+        })
+
+        $('#add_filter').on('click', function(){
+          $.ajax({
+              type: 'post',
+              url: "http://localhost:3000/api/filters",
+              data: JSON.stringify({
+                user_id: getCookie("id"),
+                type: document.getElementById("filter_selectedType").value,
+                sub : document.getElementById("filter_selectedSubCat").value,
+                isOpen : document.getElementById("filter_isOpen").value,
+                price : document.getElementById("filter_price").value,
+                rating: document.getElementById("filter_rating").value
+                }),
+              contentType : "application/json",
+			        dataType : 'json',
+              success: function(data) {
+                console.log(data)
+                getFiltersByUserId(getCookie("id"));
+              }
+          });
+        })
+
+        $('.filter_select').on('click', function(){
+          console.log($(this).data('id'))
+        })
+
+
+
+
+        function getFiltersByUserId(id){
+          console.log(id)
+          $.ajax({
+              type: 'get',
+              url: 'http://localhost:3000/api/filters?filter={"where":{"user_id":'+ id +'}}',
+              contentType : "application/json",
+              success: function(data) {
+                  $('#filter_table').empty();
+                  if(data.length == 0){
+                    $('#filter_table').append("<h3> No filters have been saved. </h3>");
+                  } else {
+                    filter_history = data;
+                    filterTable(data);                   
+                  }
+
+              },
+              error : function(error){
+
+              }
+            });
+        }
+
+        function filterTable(data){
+          var $table = $("<table>").addClass('table').addClass('table-sm');
+          $table.append("<thead>");
+          $table.append("<tr>");
+          $table.append("<th>Select</th>");
+          $table.append("<th>Type</th>");
+          $table.append("<th>Sub Cat</th>");
+          $table.append("<th>Price</th>");
+          $table.append("<th>Rating</th>");
+          $table.append("</tr>");
+          $table.append("</thead>");
+
+          var $tbody = $table.append('<tbody />').children('tbody');
+
+          data.forEach(function(item, i){
+            $tbody.append("<tr>");
+            $tbody.append('<td> <input type="button" value="Use" class="btn btn-sm btn-primary" onClick="setFilter(' + i + ')" /> </td>');
+            $tbody.append("<td>" + filter.types[item.type] + "</td>");
+            $tbody.append("<td>" + type_list[item.type][item.sub] + "</td>");
+            $tbody.append("<td>" + item.price + "</td>");
+            $tbody.append("<td>" + item.rating + "</td>");
+            $tbody.append("</tr>");
+          })
+
+          $table.appendTo('#filter_table')
+        }
+
       });
     </script>
   </body>
